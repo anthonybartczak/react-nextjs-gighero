@@ -7,15 +7,14 @@ export const typeDefs = gql`
         content: String
         tags: String
         imageUrl: String
-        createdAt: DateTime
-        updatedAt: DateTime
+        createdAt: String
+        updatedAt: String
         author: String
         authorId: String
     }
 
     type Query {
-        bandPosts: [BandPost]!
+        bandPosts: [bandPost]!
     }
-
-`
+`;
 
