@@ -1,11 +1,10 @@
 import Head from 'next/head'
 import Navbar from '../components/Navbar'
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../lib/prisma'
 
 export async function getStaticProps() {
-  const prisma = new PrismaClient()
   const ads = await prisma.bandPost.findMany({
-    where: { published: true },
+    where: {},
     include: {
       author: {
         select: { name: true },

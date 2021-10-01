@@ -13,8 +13,13 @@
     "@chakra-ui/react": "^1.6.8",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "@next-auth/prisma-adapter": "^0.5.4",
     "@prisma/client": "^2.30.3",
+    "apollo-server-micro": "^3.3.0",
+    "focus-visible": "^5.2.0",
     "framer-motion": "^4.1.17",
+    "graphql": "^15.6.0",
+    "micro-cors": "^0.1.1",
     "next": "^11.1.2",
     "next-auth": "^3.29.0",
     "react": "17.0.2",
@@ -27,5 +32,8 @@
     "postcss": "^8.3.8",
     "prisma": "^3.1.1",
     "tailwindcss": "^2.2.15"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   }
 }

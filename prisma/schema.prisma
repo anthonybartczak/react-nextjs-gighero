@@ -11,31 +11,43 @@ generator client {
 }
 
 model ClientPost {
-  id        Int     @default(autoincrement()) @id
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  tags        String?
+  imageUrl    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  author      User?   @relation(fields: [authorId], references: [id])
+  authorId    String?
 }
 
 model BandPost {
-  id        Int     @default(autoincrement()) @id
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  id          String   @id @default(uuid())
+  title       String
+  content     String
+  tags        String?
+  imageUrl    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  author      User?   @relation(fields: [authorId], references: [id])
+  authorId    String?
 }
 
 model User {
-  id            Int       @default(autoincrement()) @id
-  name          String?
-  email         String?   @unique
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   clientPosts   ClientPost[]
   bandPosts     BandPost[]
   rating        Float?
-  @@map(name: "users")
+  role          Role @default(USER)
+}
+
+enum Role {
+  USER
+  ADMIN
 }
