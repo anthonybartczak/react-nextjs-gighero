@@ -13,7 +13,7 @@ type BandPost {
   updatedAt: String
 }
 
-type Edge {
+type Edges {
   cursor: String
   node: BandPost
 }
@@ -28,7 +28,7 @@ type Query {
 }
 
 type Response {
-  edges: [Edge]
+  edges: [Edges]
   pageInfo: PageInfo
 }
 

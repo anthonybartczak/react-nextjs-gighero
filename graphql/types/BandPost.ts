@@ -12,22 +12,22 @@ export const BandPost = objectType({
         t.string('createdAt')
         t.string('updatedAt')
         t.field('author', {
-        type: User,
-            async resolve(parent, _args, ctx) {
-                return await ctx.prisma.bandPost
-                .findUnique({
-                    where: {
-                    id: parent.id,
-                    },
-                })
-                .author();
-            },
-        });
+          type: User,
+          async resolve(parent, _args, ctx) {
+              return await ctx.prisma.bandPost
+              .findUnique({
+                  where: {
+                  id: parent.id,
+                  },
+              })
+              .author();
+          },
+      });
     }
 })
 
 export const Edge = objectType({
-  name: 'Edge',
+  name: 'Edges',
   definition(t) {
     t.string('cursor')
     t.field('node', {

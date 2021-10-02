@@ -5,7 +5,7 @@ import { gql, useQuery, useMutation } from '@apollo/client'
 
 
 const AllBandPostsQuery = gql`
-  query allLinksQuery($first: Int, $after: String) {
+  query allBandPostsQuery($first: Int, $after: String) {
     bandPosts(first: $first, after: $after) {
       pageInfo {
         endCursor
@@ -26,12 +26,14 @@ const AllBandPostsQuery = gql`
 `;
 
 export default function Home() {
-  const { data, loading, error, fetchMore } = useQuery(AllBandPostsQuery, {
+  const { loading, data, error, fetchMore } = useQuery(AllBandPostsQuery, {
     variables: { first: 2 },
   });
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Oh no... {error.message}</p>
+
+  const { endCursor, hasNextPage } = data.bandPosts.pageInfo;
 
   return (
     <div>
@@ -44,18 +46,40 @@ export default function Home() {
       <main>
       <div className="container mx-auto max-w-5xl my-20">
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {data.bandPosts.map(link => (
-            <li key={link.id} className="shadow  max-w-md  rounded">
-              <Image alt='image' className="shadow-sm" src={link.imageUrl}/>
+          {data?.bandPosts.edges.map(({ node })=> (
+            <li key={node.id} className="shadow  max-w-md  rounded">
               <div className="p-5 flex flex-col space-y-2">
-                <p className="text-sm text-blue-500">{link.tags}</p>
-                <p className="text-lg font-medium">{link.title}</p>
-                <p className="text-gray-600">{link.content}</p>
+              <p className="text-sm text-blue-500">{node.tags}</p>
+                <p className="text-lg font-medium">{node.title}</p>
+                <p className="text-gray-600">{node.content}</p>
               </div>
             </li>
           ))}
         </ul>
       </div>
+      {hasNextPage ? (
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded my-10"
+            onClick={() => {
+              fetchMore({
+                variables: { after: endCursor },
+                updateQuery: (prevResult, { fetchMoreResult }) => {
+                  fetchMoreResult.bandPosts.edges = [
+                    ...prevResult.bandPosts.edges,
+                    ...fetchMoreResult.bandPosts.edges,
+                  ];
+                  return fetchMoreResult;
+                },
+              });
+            }}
+          >
+            more
+          </button>
+        ) : (
+          <p className="my-10 text-center font-medium">
+            You've reached the end!{" "}
+          </p>
+        )}
       </main>
       <footer>
       </footer>
