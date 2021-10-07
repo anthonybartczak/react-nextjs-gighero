@@ -1,8 +1,18 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Navbar from '../components/Navbar'
-import { gql, useQuery, useMutation } from '@apollo/client'
+import { gql, useQuery, useMutation, InMemoryCache } from '@apollo/client'
+import { offsetLimitPagination } from "@apollo/client/utilities";
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        users: offsetLimitPagination(),
+      },
+    },
+  },
+});
 
 const AllBandPostsQuery = gql`
   query allBandPostsQuery($first: Int, $after: String) {
