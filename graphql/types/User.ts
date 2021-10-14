@@ -10,18 +10,18 @@ export const User = objectType({
     t.string('image');
     t.float('rating');
     t.field('role', { type: Role });
-    // t.list.field('bandPosts', {
-    //   type: BandPost,
-    //   async resolve(_parent, _args, ctx) {
-    //     return await ctx.prisma.user
-    //       .findUnique({
-    //         where: {
-    //           id: _parent.id,
-    //         },
-    //       })
-    //       .bandPosts()
-    //   },
-    // })
+    t.list.field('bandPosts', {
+      type: BandPost,
+      async resolve(_parent, _args, ctx) {
+        return await ctx.prisma.user
+          .findUnique({
+            where: {
+              id: _parent.id,
+            },
+          })
+          .bandPosts()
+      },
+    })
   },
 })
 

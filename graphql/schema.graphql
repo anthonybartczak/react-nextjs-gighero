@@ -38,6 +38,7 @@ enum Role {
 }
 
 type User {
+  bandPosts: [BandPost]
   email: String
   id: String
   image: String

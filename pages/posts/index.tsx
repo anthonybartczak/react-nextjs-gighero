@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import Navbar from '../components/Navbar'
+import Navbar from '../../components/Navbar'
 import { gql, useQuery, useMutation, InMemoryCache } from '@apollo/client'
 import { offsetLimitPagination } from "@apollo/client/utilities";
 import Pagination from "@choc-ui/paginator";
@@ -41,7 +41,7 @@ const AllBandPostsQuery = gql`
 export default function Home() {
   
   const { loading, data, error, fetchMore } = useQuery(AllBandPostsQuery, {
-    variables: { first: 2 },
+    variables: { first: 1 },
   });
 
   if (loading) return <p>Loading...</p>
@@ -58,10 +58,10 @@ export default function Home() {
       </Head>
       <Navbar/>
       <main>
-      <div className="container mx-auto max-w-5xl my-20">
+      <div className="container mx-auto max-w-6xl my-20">
         <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-5 place-items-center">
           {data?.bandPosts.edges.map(({ node }) => (
-            <li key={node.id} className="shadow max-w-md rounded w-64">
+            <li key={node.id} className="shadow w-xl rounded">
               <div className="p-5 flex flex-col space-y-2">
               <Image
                 src={node.imageUrl}
@@ -102,17 +102,17 @@ export default function Home() {
         )}
         <Flex
           w="full"
-          bg={"whiteAlpha.50"}
-          p={50}
+          bg={"gray.100"}
+          p={5}
           alignItems="center"
           justifyContent="center"
         >
         <Pagination
-          colorScheme="black"
-          focusRing="black"
+          baseStyles={{ bg: "whiteAlpha.50" }}
+          activeStyles={{ bg: "blueMunsell.300" }}
           defaultCurrent={2}
           total={100}
-          paginationProps={{ display: "flex", mb: 5 }}
+          paginationProps={{ display: "flex", mb: 0}}
           responsive
         /> 
         </Flex>
