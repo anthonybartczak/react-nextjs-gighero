@@ -96,10 +96,10 @@ export default function WithSubnavigation() {
               fontSize={'md'}
               fontWeight={600}
               href={'#'}
-              bg='blueMunsell.900'
+              bg='blueMunsell.700'
               color='white'
               _hover={{
-                bg: 'blueMunsell.700',
+                bg: 'blueMunsell.800',
                 color: 'white'
               }}>
               Rejestracja

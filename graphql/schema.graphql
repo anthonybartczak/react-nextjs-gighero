@@ -14,22 +14,15 @@ type BandPost {
 }
 
 type Edges {
-  cursor: String
   node: BandPost
 }
 
-type PageInfo {
-  endCursor: String
-  hasNextPage: Boolean
-}
-
 type Query {
-  bandPosts(after: String, first: Int): Response
+  bandPosts(first: Int, offset: Int): Response
 }
 
 type Response {
   edges: [Edges]
-  pageInfo: PageInfo
 }
 
 enum Role {

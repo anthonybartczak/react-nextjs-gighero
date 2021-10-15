@@ -1,31 +1,14 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Navbar from '../../components/Navbar'
-import { gql, useQuery, useMutation, InMemoryCache } from '@apollo/client'
-import { offsetLimitPagination } from "@apollo/client/utilities";
+import { gql, useQuery } from '@apollo/client'
 import Pagination from "@choc-ui/paginator";
-import { Flex, useColorModeValue } from "@chakra-ui/react";
-
-
-const cache = new InMemoryCache({
-  typePolicies: {
-    Query: {
-      fields: {
-        users: offsetLimitPagination(),
-      },
-    },
-  },
-});
+import { Flex } from "@chakra-ui/react";
 
 const AllBandPostsQuery = gql`
-  query allBandPostsQuery($first: Int, $after: String) {
-    bandPosts(first: $first, after: $after) {
-      pageInfo {
-        endCursor
-        hasNextPage
-      }
+  query allBandPostsQuery($first: Int, $offset: Int) {
+    bandPosts(first: $first, offset: $offset) {
       edges {
-        cursor
         node {
           imageUrl
           title
@@ -39,15 +22,25 @@ const AllBandPostsQuery = gql`
 `;
 
 export default function Home() {
-  
+
   const { loading, data, error, fetchMore } = useQuery(AllBandPostsQuery, {
-    variables: { first: 1 },
+    variables: {
+      first: 1,
+      offset: 0
+    },
   });
+  
+  function onPageChange(pageNumber: number): void {
+    fetchMore({
+      variables: {
+        first: 1,
+        offset: pageNumber - 1
+      }
+    });
+  }
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Oh no... {error.message}</p>
-
-  const { endCursor, hasNextPage } = data.bandPosts.pageInfo;
 
   return (
     <div>
@@ -77,43 +70,22 @@ export default function Home() {
           ))}
         </ul>
       </div>
-      {hasNextPage ? (
-          <button
-            className="px-4 py-2 bg-blue-500 text-white rounded my-10"
-            onClick={() => {
-              fetchMore({
-                variables: { after: endCursor },
-                updateQuery: (prevResult, { fetchMoreResult }) => {
-                  fetchMoreResult.bandPosts.edges = [
-                    ...prevResult.bandPosts.edges,
-                    ...fetchMoreResult.bandPosts.edges,
-                  ];
-                  return fetchMoreResult;
-                },
-              });
-            }}
-          >
-            more
-          </button>
-        ) : (
-          <p className="my-10 text-center font-medium">
-            You&apos;ve reached the end!{" "}
-          </p>
-        )}
         <Flex
           w="full"
-          bg={"gray.100"}
           p={5}
           alignItems="center"
           justifyContent="center"
         >
         <Pagination
           baseStyles={{ bg: "whiteAlpha.50" }}
-          activeStyles={{ bg: "blueMunsell.300" }}
-          defaultCurrent={2}
+          activeStyles={{ bg: "blueMunsell.100" }}
+          defaultCurrent={1}
           total={100}
-          paginationProps={{ display: "flex", mb: 0}}
+          paginationProps={{ display: "flex"}}
+          pageNeighbours={3}
           responsive
+          rounded="full"
+          onChange={(pageNumber) => onPageChange(pageNumber)}
         /> 
         </Flex>
       </main>
