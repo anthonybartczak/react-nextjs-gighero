@@ -4,6 +4,9 @@ import Navbar from '../../components/Navbar'
 import { gql, useQuery } from '@apollo/client'
 import Pagination from "@choc-ui/paginator";
 import { Flex } from "@chakra-ui/react";
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+
 
 const AllBandPostsQuery = gql`
   query allBandPostsQuery($first: Int, $offset: Int) {
@@ -23,20 +26,28 @@ const AllBandPostsQuery = gql`
 
 export default function Home() {
 
+  const router = useRouter()
+  const [pageIndex, setPageIndex] = useState(1);
+
   const { loading, data, error, fetchMore } = useQuery(AllBandPostsQuery, {
     variables: {
       first: 1,
       offset: 0
     },
+    fetchPolicy: "cache-and-network"
   });
-  
-  function onPageChange(pageNumber: number): void {
+
+  function OnPageChange(pageNumber: number): void {
+    setPageIndex(pageNumber)
     fetchMore({
       variables: {
-        first: 1,
+        first: 2,
         offset: pageNumber - 1
-      }
+      },
     });
+    console.log("Fetched another page..." + (pageNumber - 1))
+    console.log(data)
+    router.push(`/posts?page=${pageNumber}`)
   }
 
   if (loading) return <p>Loading...</p>
@@ -79,13 +90,13 @@ export default function Home() {
         <Pagination
           baseStyles={{ bg: "whiteAlpha.50" }}
           activeStyles={{ bg: "blueMunsell.100" }}
-          defaultCurrent={1}
+          defaultCurrent={pageIndex}
           total={100}
           paginationProps={{ display: "flex"}}
           pageNeighbours={3}
           responsive
           rounded="full"
-          onChange={(pageNumber) => onPageChange(pageNumber)}
+          onChange={(pageNumber) => OnPageChange(pageNumber)}
         /> 
         </Flex>
       </main>
