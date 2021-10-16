@@ -5,15 +5,14 @@ const apolloClient = new ApolloClient({
   uri: 'http://localhost:3000/api/graphql',
   cache: new InMemoryCache({
     typePolicies: {
-      BandPostsQuery: {
+      Query: {
         fields: {
-          //bandPosts: offsetLimitPagination(),
-          read(bandPosts) {
-            return bandPosts;
-          }
-        }
-      }
-    }
+          bandPosts: {
+            keyArgs: false,
+          },
+        },
+      },
+    },
   })
 });
 

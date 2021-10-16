@@ -41,7 +41,7 @@ export default function Home() {
     setPageIndex(pageNumber)
     fetchMore({
       variables: {
-        first: 2,
+        limit: 2,
         offset: pageNumber - 1
       },
     });
