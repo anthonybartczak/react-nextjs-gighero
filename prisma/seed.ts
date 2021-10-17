@@ -1,13 +1,13 @@
-import { prisma } from '../lib/prisma'
+import prisma from '../lib/prisma'
 import { dummy } from '../data/dummy'
 
 async function main() {
     const alice = await prisma.user.upsert({
-      where: { email: 'alice@prisma.io' },
+      where: { email: 'charlie@prisma.io' },
       update: {},
       create: {
-        email: 'alice@prisma.io',
-        name: 'Alice',
+        email: 'charlie@prisma.io',
+        name: 'Charlie',
         bandPosts: {
           create: dummy,
         },

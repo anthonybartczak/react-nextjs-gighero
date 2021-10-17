@@ -31,7 +31,7 @@ export default function Home() {
 
   const { loading, data, error, fetchMore } = useQuery(AllBandPostsQuery, {
     variables: {
-      first: 1,
+      first: 10,
       offset: 0
     },
     fetchPolicy: "cache-and-network"
@@ -41,12 +41,10 @@ export default function Home() {
     setPageIndex(pageNumber)
     fetchMore({
       variables: {
-        limit: 2,
+        limit: 10,
         offset: pageNumber - 1
       },
     });
-    console.log("Fetched another page..." + (pageNumber - 1))
-    console.log(data)
     router.push(`/posts?page=${pageNumber}`)
   }
 
@@ -75,7 +73,6 @@ export default function Home() {
               />
               <p className="text-sm text-blue-500">{node.tags}</p>
                 <p className="text-lg font-medium">{node.title}</p>
-                <p className="text-gray-600">{node.content}</p>
               </div>
             </li>
           ))}
