@@ -1,2 +1,2 @@
-export * from './BandPost'
+export * from './Posts'
 export * from './User'

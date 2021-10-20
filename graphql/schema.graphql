@@ -2,7 +2,19 @@
 ### Do not make changes to this file directly
 
 
-type BandPost {
+type Aggregate {
+  _count: Count
+}
+
+type Count {
+  _all: Int
+}
+
+type Edges {
+  node: Post
+}
+
+type Post {
   author: User
   content: String
   createdAt: String
@@ -13,15 +25,12 @@ type BandPost {
   updatedAt: String
 }
 
-type Edges {
-  node: BandPost
-}
-
 type Query {
-  bandPosts(first: Int, offset: Int): Response
+  posts(first: Int, offset: Int): Response
 }
 
 type Response {
+  aggregate: Aggregate
   edges: [Edges]
 }
 
@@ -31,11 +40,11 @@ enum Role {
 }
 
 type User {
-  bandPosts: [BandPost]
   email: String
   id: String
   image: String
   name: String
+  posts: [Post]
   rating: Float
   role: Role
 }

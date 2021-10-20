@@ -1,8 +1,8 @@
 import { intArg, objectType, stringArg, extendType } from 'nexus';
 import { User } from './User'
 
-export const BandPost = objectType({
-    name: 'BandPost',
+export const Post = objectType({
+    name: 'Post',
     definition(t) {
         t.string('id')
         t.string('title')
@@ -14,7 +14,7 @@ export const BandPost = objectType({
         t.field('author', {
           type: User,
           async resolve(parent, _args, ctx) {
-              return await ctx.prisma.bandPost
+              return await ctx.prisma.post
               .findUnique({
                   where: {
                   id: parent.id,
@@ -30,8 +30,24 @@ export const Edge = objectType({
   name: 'Edges',
   definition(t) {
     t.field('node', {
-      type: BandPost,
+      type: Post,
     })
+  },
+})
+
+export const Aggregate = objectType({
+  name: 'Aggregate',
+  definition(t) {
+    t.field('_count', {
+      type: 'Count'
+    })
+  },
+})
+
+export const Count = objectType({
+  name: 'Count',
+  definition(t) {
+    t.int('_all')
   },
 })
 
@@ -41,13 +57,16 @@ export const Response = objectType({
     t.list.field('edges', {
       type: Edge,
     })
+    t.field('aggregate', { 
+      type: Aggregate,
+    })
   },
 })
 
-export const BandPostsQuery = extendType({
+export const PostsQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.field('bandPosts', {
+    t.field('posts', {
       type: 'Response',
       args: {
         first: intArg(),
@@ -55,22 +74,27 @@ export const BandPostsQuery = extendType({
       },
       async resolve(_, args, ctx) {
         let queryResults = null
+        let resultCount = null
 
-        queryResults = await ctx.prisma.bandPost.findMany({
+        queryResults = await ctx.prisma.post.findMany({
           take: args.first, // => the number of items to return from the database
           skip: args.offset, // skip the cursor
         })
 
+        resultCount = await ctx.prisma.post.aggregate({
+          _count: { _all: true }
+        })
+
         if (queryResults.length > 0) {
           const result = {
-            edges: queryResults.map(bandPost => ({
-              node: bandPost,
+            edges: queryResults.map((post: any) => ({
+              node: post,
             })),
+            aggregate: resultCount
           }
-
+          console.log(resultCount["_count"])
           return result
         }
-        //
         return {
           edges: [],
         }

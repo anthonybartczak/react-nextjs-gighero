@@ -8,7 +8,7 @@ async function main() {
       create: {
         email: 'charlie@prisma.io',
         name: 'Charlie',
-        bandPosts: {
+        posts: {
           create: dummy,
         },
       },

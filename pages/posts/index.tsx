@@ -8,9 +8,14 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 
 
-const AllBandPostsQuery = gql`
-  query allBandPostsQuery($first: Int, $offset: Int) {
-    bandPosts(first: $first, offset: $offset) {
+const allPostsQuery = gql`
+  query allPostsQuery($first: Int, $offset: Int) {
+    posts(first: $first, offset: $offset) {
+      aggregate {
+        _count {
+          _all
+        }
+      }
       edges {
         node {
           imageUrl
@@ -29,7 +34,7 @@ export default function Home() {
   const router = useRouter()
   const [pageIndex, setPageIndex] = useState(1);
 
-  const { loading, data, error, fetchMore } = useQuery(AllBandPostsQuery, {
+  const { loading, data, error, fetchMore } = useQuery(allPostsQuery, {
     variables: {
       first: 10,
       offset: 0
@@ -62,7 +67,7 @@ export default function Home() {
       <main>
       <div className="container mx-auto max-w-6xl my-20">
         <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-5 place-items-center">
-          {data?.bandPosts.edges.map(({ node }) => (
+          {data?.posts.edges.map(({ node }) => (
             <li key={node.id} className="shadow w-xl rounded">
               <div className="p-5 flex flex-col space-y-2">
               <Image
@@ -88,7 +93,7 @@ export default function Home() {
           baseStyles={{ bg: "whiteAlpha.50" }}
           activeStyles={{ bg: "blueMunsell.100" }}
           defaultCurrent={pageIndex}
-          total={100}
+          total={data.posts.aggregate._count._all}
           paginationProps={{ display: "flex"}}
           pageNeighbours={3}
           responsive

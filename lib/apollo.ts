@@ -7,7 +7,7 @@ const apolloClient = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          bandPosts: {
+          posts: {
             keyArgs: false,
           },
         },
