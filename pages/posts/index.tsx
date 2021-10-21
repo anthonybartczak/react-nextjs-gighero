@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import Image from 'next/image'
+//import Image from 'next/image'
 import Navbar from '../../components/Navbar'
 import { gql, useQuery } from '@apollo/client'
 import Pagination from "@choc-ui/paginator";
-import { Flex } from "@chakra-ui/react";
-import { useState } from 'react';
+import { Box, chakra, Flex, Link, Image } from "@chakra-ui/react";
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 
@@ -72,21 +72,83 @@ export default function Home() {
         <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-5 place-items-center">
           {data?.posts.edges.map(({ node }) => (
             <li key={node.id} className="shadow w-xl rounded">
-              <div className="p-5 flex flex-col space-y-2">
+            <Box
+              mx="auto"
+              rounded="lg"
+              shadow="md"
+              bg={"gray.800"}
+              maxW="2xl"
+              display="flex"
+            >
               <Image
+                roundedLeft="lg"
+                w={300}
+                h={200}
+                fit="cover"
                 src={node.imageUrl}
-                alt="Picture of the author"
-                width={500}
-                height={300}
+                alt="Article"
+                margin={2}
               />
-              <p className="text-sm text-blue-500">{node.tags}</p>
-                <p className="text-lg font-medium">{node.title}</p>
-              </div>
+              <Box p={6}>
+                <Box>
+                  <chakra.span
+                    fontSize="xs"
+                    textTransform="uppercase"
+                    color={"brand.400"}
+                  >
+                    Product
+                  </chakra.span>
+                  <Link
+                    display="block"
+                    color={"white"}
+                    fontWeight="bold"
+                    fontSize="2xl"
+                    mt={2}
+                    _hover={{ color: "gray.600", textDecor: "underline" }}            
+                  >
+                    123123213
+                  </Link>
+                  <chakra.p
+                    mt={2}
+                    fontSize="sm"
+                    color={"gray.400"}
+                  >
+                  </chakra.p>
+                </Box>
+                <Box mt={4}>
+                  <Flex alignItems="center">
+                    <Flex alignItems="center">
+                      <Image
+                        h={10}
+                        fit="cover"
+                        rounded="full"
+                        src="https://images.unsplash.com/photo-1586287011575-a23134f797f9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=48&q=60"
+                        alt="Avatar"
+                      />
+                      <Link
+                        mx={2}
+                        fontWeight="bold"
+                        color={"gray.200"}
+                      >
+                        Jone Doe
+                      </Link>
+                    </Flex>
+                      <chakra.span
+                        mx={1}
+                        fontSize="sm"
+                        color={"gray.300"}
+                      >
+                        21 SEP 2015
+                      </chakra.span>
+                    </Flex>
+                  </Box>
+                </Box>
+              </Box>
             </li>
           ))}
         </ul>
       </div>
-        <Flex
+      <Flex
           w="full"
           p={5}
           alignItems="center"
