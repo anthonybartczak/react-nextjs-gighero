@@ -92,7 +92,6 @@ export const PostsQuery = extendType({
             })),
             aggregate: resultCount
           }
-          console.log(resultCount["_count"])
           return result
         }
         return {

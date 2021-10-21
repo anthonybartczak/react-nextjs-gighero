@@ -65,7 +65,10 @@ export default function Home() {
       </Head>
       <Navbar/>
       <main>
-      <div className="container mx-auto max-w-6xl my-20">
+      <div className="container mx-auto shadow w-xl rounded mt-10">
+        <div>placeholder</div>
+      </div>
+      <div className="container mx-auto max-w-6xl my-5">
         <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-5 place-items-center">
           {data?.posts.edges.map(({ node }) => (
             <li key={node.id} className="shadow w-xl rounded">
