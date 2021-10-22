@@ -96,10 +96,10 @@ export default function WithSubnavigation() {
               fontSize={'md'}
               fontWeight={600}
               href={'#'}
-              bg='blueMunsell.700'
+              bg='brandRed.900'
               color='white'
               _hover={{
-                bg: 'blueMunsell.800',
+                bg: 'brandRed.900',
                 color: 'white'
               }}>
               Rejestracja
@@ -127,7 +127,7 @@ const DesktopNav = () => {
           <Popover trigger={'hover'} placement={'bottom-start'}>
             <PopoverTrigger>
               <div>
-              <Icon color={'blueMunsell.900'} w={4} h={4} as={navItem.icon}/>
+              <Icon color={'brandRed.900'} w={4} h={4} as={navItem.icon}/>
               <Link
                 p={2}
                 href={navItem.href ?? '#'}
@@ -192,7 +192,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
           justify={'flex-end'}
           align={'center'}
           flex={1}>
-          <Icon color={'yaleBlue.900'} w={5} h={5} as={ChevronRightIcon} />
+          <Icon color={'brandRed.900'} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
     </Link>
