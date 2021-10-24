@@ -11,18 +11,24 @@ import { useRouter } from 'next/router';
 const allPostsQuery = gql`
   query allPostsQuery($first: Int, $offset: Int) {
     posts(first: $first, offset: $offset) {
+      edges {
+        node {
+          tags {
+            id
+            name
+          }
+          imageUrl
+          title
+          content
+          id
+          author {
+            name
+          }
+        }
+      }
       aggregate {
         _count {
           _all
-        }
-      }
-      edges {
-        node {
-          imageUrl
-          title
-          tags
-          content
-          id
         }
       }
     }
@@ -55,7 +61,7 @@ export default function Home() {
 
   if (loading) return <p>Loading...</p>
   if (error) return <p>Oh no... {error.message}</p>
-
+  
   return (
     <div className="#eef6fe">
       <Head>
@@ -70,8 +76,8 @@ export default function Home() {
       </div>
       <div className="container mx-auto max-w-6xl my-5">
         <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-5 place-items-center ">
-          {data?.posts.edges.map(({ node }) => (
-            <li key={node.id}>
+          {data?.posts.edges.map(({node}: any, i: React.Key) => (
+            <li key={i}>
             <Box
               mx="auto"
               rounded="md"
@@ -103,12 +109,16 @@ export default function Home() {
                   >
                     {node.title}
                   </Link>
-                  <chakra.p
-                    mt={2}
-                    fontSize="sm"
-                    color={"gray.400"}
-                  >
-                  </chakra.p>
+                  {node?.tags.map(({tag}: any, i: React.Key) => (
+                    <chakra.p
+                      key={i}
+                      mt={2}
+                      fontSize="sm"
+                      color={"gray.400"}
+                    >
+                      {node.tags[i]?.name}
+                    </chakra.p>
+                  ))}
                 </Box>
                 <Box mt={4}>
                   <Flex alignItems="center">
@@ -133,7 +143,7 @@ export default function Home() {
                         fontSize="sm"
                         color={"gray.300"}
                       >
-                        {node.createdAt}
+                        {node.author.name}
                       </chakra.span>
                     </Flex>
                   </Box>

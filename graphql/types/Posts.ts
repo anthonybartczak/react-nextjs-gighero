@@ -2,16 +2,6 @@ import { intArg, objectType, stringArg, extendType } from 'nexus';
 import { Tag } from './Tags';
 import { User } from './User'
 
-// export const Query = queryType({
-//   definition(t) {
-//     t.list.field('posts', {
-//       type: 'Post',
-//       resolve(_, __, ctx) {
-//         return ctx.db.post.findMany({ where: { published: true } })
-//       },
-//     })
-//   },
-// })
 
 export const Post = objectType({
     name: 'Post',
