@@ -39,10 +39,11 @@ model User {
 }
 
 model Tag {
-  id     Int     @id
-  name   String
-  Post   Post?   @relation(fields: [postId], references: [id])
-  postId String?
+  id    Int    @id
+  name  String
+  posts Post[] @relation(references: [id])
+
+  @@map("tags")
 }
 
 enum Role {
