@@ -1,5 +1,17 @@
 import { intArg, objectType, stringArg, extendType } from 'nexus';
+import { Tag } from './Tags';
 import { User } from './User'
+
+// export const Query = queryType({
+//   definition(t) {
+//     t.list.field('posts', {
+//       type: 'Post',
+//       resolve(_, __, ctx) {
+//         return ctx.db.post.findMany({ where: { published: true } })
+//       },
+//     })
+//   },
+// })
 
 export const Post = objectType({
     name: 'Post',
@@ -7,22 +19,33 @@ export const Post = objectType({
         t.string('id')
         t.string('title')
         t.string('content')
-        t.string('tags')
         t.string('imageUrl')
         t.string('createdAt')
         t.string('updatedAt')
+        t.list.field('tags', {
+          type: Tag,
+          async resolve(parent, _args, ctx) {
+            return await ctx.prisma.post
+              .findUnique({
+                  where: {
+                    id: parent.id,
+                  },
+              })
+            .tags()
+          }
+        })
         t.field('author', {
           type: User,
           async resolve(parent, _args, ctx) {
-              return await ctx.prisma.post
-              .findUnique({
-                  where: {
+            return await ctx.prisma.post
+            .findUnique({
+                where: {
                   id: parent.id,
-                  },
-              })
-              .author();
+                },
+            })
+            .author();
           },
-      });
+      })
     }
 })
 

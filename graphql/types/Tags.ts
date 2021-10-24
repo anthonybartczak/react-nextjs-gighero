@@ -9,7 +9,7 @@ export const Tag = objectType({
     t.list.field('posts', {
       type: Post,
       async resolve(_parent, _args, ctx) {
-        return await ctx.prisma.user
+        return await ctx.prisma.tag
           .findUnique({
             where: {
               id: _parent.id,

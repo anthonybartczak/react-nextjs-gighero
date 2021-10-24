@@ -20,7 +20,7 @@ type Post {
   createdAt: String
   id: String
   imageUrl: String
-  tags: String
+  tags: [Tag]
   title: String
   updatedAt: String
 }
@@ -37,6 +37,12 @@ type Response {
 enum Role {
   ADMIN
   USER
+}
+
+type Tag {
+  id: Int
+  name: String
+  posts: [Post]
 }
 
 type User {
