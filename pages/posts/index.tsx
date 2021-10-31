@@ -54,7 +54,7 @@ export default function Home() {
     fetchMore({
       variables: {
         limit: 10,
-        offset: pageNumber - 1
+        offset: (pageNumber - 1) * 10
       },
     });
     router.push(`/posts?page=${pageNumber}`)
@@ -81,17 +81,17 @@ export default function Home() {
                 children={<GiModernCity className="text-gray-400"/>}/>
               <Input type="city" placeholder="Miasto" focusBorderColor="brandRed.200"/>
             </InputGroup>
-            <Select backgroundColor="gray.50">
+            <Select backgroundColor="gray.50" focusBorderColor="brandRed.200">
               <option value="date-latest">Najnowsze ogłoszenia</option>
               <option value="date-oldest">Najstarsze ogłoszenia</option>
             </Select>
           </Flex>
         </div>
         <Flex>
-        <div className="container mx-auto shadow w-xl rounded mt-10 items-center bg-white">
+        <div className="container ml-5 shadow w-xl rounded mt-10 items-center bg-white">
           <div>filters</div>
         </div>
-        <div className="flex container ml-12 mr-64 max-w-6xl my-10 items-center">
+        <div className="flex container ml-5 mr-64 max-w-6xl my-10 items-center">
           <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-2">
             {data?.posts.edges.map(({node}: any, i: React.Key) => (
               <li key={i}>
