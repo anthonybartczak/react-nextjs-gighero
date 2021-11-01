@@ -1,4 +1,4 @@
-import { intArg, objectType, stringArg, extendType } from 'nexus';
+import { intArg, objectType, extendType } from 'nexus';
 import { Tag } from './Tags';
 import { User } from './User'
 
@@ -14,11 +14,11 @@ export const Post = objectType({
         t.string('updatedAt')
         t.list.field('tags', {
           type: Tag,
-          async resolve(parent, _args, ctx) {
+          async resolve(_parent, _args, ctx) {
             return await ctx.prisma.post
               .findUnique({
                   where: {
-                    id: parent.id,
+                    id: _parent.id,
                   },
               })
             .tags()
@@ -39,8 +39,8 @@ export const Post = objectType({
     }
 })
 
-export const Edge = objectType({
-  name: 'Edges',
+export const PostEdge = objectType({
+  name: 'PostEdges',
   definition(t) {
     t.field('node', {
       type: Post,
@@ -48,31 +48,13 @@ export const Edge = objectType({
   },
 })
 
-export const Aggregate = objectType({
-  name: 'Aggregate',
-  definition(t) {
-    t.field('_count', {
-      type: 'Count'
-    })
-  },
-})
-
-export const Count = objectType({
-  name: 'Count',
-  definition(t) {
-    t.int('_all')
-  },
-})
-
-export const Response = objectType({
-  name: 'Response',
+export const PostResponse = objectType({
+  name: 'PostResponse',
   definition(t) {
     t.list.field('edges', {
-      type: Edge,
+      type: PostEdge,
     })
-    t.field('aggregate', { 
-      type: Aggregate,
-    })
+    t.int('count')
   },
 })
 
@@ -80,7 +62,7 @@ export const PostsQuery = extendType({
   type: 'Query',
   definition(t) {
     t.field('posts', {
-      type: 'Response',
+      type: 'PostResponse',
       args: {
         first: intArg(),
         offset: intArg(),
@@ -94,16 +76,14 @@ export const PostsQuery = extendType({
           skip: args.offset, // skip the cursor
         })
 
-        resultCount = await ctx.prisma.post.aggregate({
-          _count: { _all: true }
-        })
+        resultCount = await ctx.prisma.post.count()
 
         if (queryResults.length > 0) {
           const result = {
             edges: queryResults.map((post: any) => ({
               node: post,
             })),
-            aggregate: resultCount
+            count: resultCount
           }
           return result
         }

@@ -1,5 +1,6 @@
-import { objectType } from 'nexus';
+import { extendType, objectType } from 'nexus';
 import { Post } from './Posts';
+
 
 export const Tag = objectType({
   name: 'Tag',
@@ -16,6 +17,54 @@ export const Tag = objectType({
             },
           })
           .posts()
+      },
+    })
+  },
+})
+
+export const TagEdge = objectType({
+  name: 'TagEdges',
+  definition(t) {
+    t.field('node', {
+      type: Tag,
+    })
+  },
+})
+
+export const TagResponse = objectType({
+  name: 'TagResponse',
+  definition(t) {
+    t.list.field('edges', {
+      type: TagEdge,
+    })
+    t.int('count')
+  },
+})
+
+export const TagsQuery = extendType({
+  type: 'Query',
+  definition(t) {
+    t.field('tags', {
+      type: 'TagResponse',
+      async resolve(_, args, ctx) {
+        let queryResults = null
+        let resultCount = null
+
+        queryResults = await ctx.prisma.tag.findMany()
+        resultCount = await ctx.prisma.tag.count()
+
+        if (queryResults.length > 0) {
+          const result = {
+            edges: queryResults.map((tag: any) => ({
+              node: tag,
+            })),
+            count: resultCount
+          }
+          return result
+        }
+        return {
+          edges: [],
+        }
       },
     })
   },

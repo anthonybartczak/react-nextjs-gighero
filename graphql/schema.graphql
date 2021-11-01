@@ -2,18 +2,6 @@
 ### Do not make changes to this file directly
 
 
-type Aggregate {
-  _count: Count
-}
-
-type Count {
-  _all: Int
-}
-
-type Edges {
-  node: Post
-}
-
 type Post {
   author: User
   content: String
@@ -25,13 +13,18 @@ type Post {
   updatedAt: String
 }
 
-type Query {
-  posts(first: Int, offset: Int): Response
+type PostEdges {
+  node: Post
 }
 
-type Response {
-  aggregate: Aggregate
-  edges: [Edges]
+type PostResponse {
+  count: Int
+  edges: [PostEdges]
+}
+
+type Query {
+  posts(first: Int, offset: Int): PostResponse
+  tags: TagResponse
 }
 
 enum Role {
@@ -43,6 +36,15 @@ type Tag {
   id: Int
   name: String
   posts: [Post]
+}
+
+type TagEdges {
+  node: Tag
+}
+
+type TagResponse {
+  count: Int
+  edges: [TagEdges]
 }
 
 type User {
