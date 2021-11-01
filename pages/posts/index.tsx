@@ -14,24 +14,19 @@ const allPostsQuery = gql`
     posts(first: $first, offset: $offset) {
       edges {
         node {
-          tags {
-            id
-            name
-          }
           imageUrl
-          title
-          content
           id
           author {
             name
           }
+          title
+          tags {
+            id
+            name
+          }
         }
       }
-      aggregate {
-        _count {
-          _all
-        }
-      }
+      count
     }
   }
 `;
@@ -50,6 +45,7 @@ export default function Home() {
   });
 
   function OnPageChange(pageNumber: number): void {
+    console.log(pageNumber)
     setPageIndex(pageNumber)
     fetchMore({
       variables: {
@@ -164,9 +160,9 @@ export default function Home() {
           >
           <Pagination
             baseStyles={{ bg: "whiteAlpha.50" }}
-            activeStyles={{ bg: "blueMunsell.100" }}
+            activeStyles={{ bg: "brandRed.300" }}
             defaultCurrent={pageIndex}
-            total={data.posts.aggregate._count._all}
+            total={data.posts.count}
             paginationProps={{ display: "flex"}}
             pageNeighbours={3}
             responsive
