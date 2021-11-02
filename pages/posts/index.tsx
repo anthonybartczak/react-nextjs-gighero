@@ -8,6 +8,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { PhoneIcon } from '@chakra-ui/icons';
 import { GiModernCity } from "react-icons/gi";
+import { CUIAutoComplete } from 'chakra-ui-autocomplete'
+
 
 const allPostsQuery = gql`
   query allPostsQuery($first: Int, $offset: Int) {
@@ -31,12 +33,24 @@ const allPostsQuery = gql`
   }
 `;
 
+const allTagsQuery = gql`
+   query allTagsQuery {
+    edges {
+      node {
+        name
+      }
+    }
+  }
+`;
+
 export default function Home() {
 
   const router = useRouter()
   const [pageIndex, setPageIndex] = useState(1);
+  //const [pickerItems, setPickerItems] = useState(countries);
+  const [selectedItems, setSelectedItems] = useState([]);
 
-  const { loading, data, error, fetchMore } = useQuery(allPostsQuery, {
+  const { loading: loadingP, data: dataP, error: errorP, fetchMore: fetchMoreP } = useQuery(allPostsQuery, {
     variables: {
       first: 10,
       offset: 0
@@ -44,10 +58,14 @@ export default function Home() {
     fetchPolicy: "cache-and-network"
   });
 
+  const { loading: loadingT, data: dataT, error: errorT } = useQuery(allTagsQuery, {
+    fetchPolicy: "cache-and-network"
+  });
+
   function OnPageChange(pageNumber: number): void {
     console.log(pageNumber)
     setPageIndex(pageNumber)
-    fetchMore({
+    fetchMoreP({
       variables: {
         limit: 10,
         offset: (pageNumber - 1) * 10
@@ -56,8 +74,8 @@ export default function Home() {
     router.push(`/posts?page=${pageNumber}`)
   }
 
-  if (loading) return <p>Loading...</p>
-  if (error) return <p>Oh no... {error.message}</p>
+  if (loadingP) return <p>Loading...</p>
+  if (errorP) return <p>Oh no... {errorP.message}</p>
 
   return (
     <div className="bg-gray-100">
@@ -86,10 +104,11 @@ export default function Home() {
         <Flex>
         <div className="container ml-5 shadow w-xl rounded mt-10 items-center bg-white">
           <div>filters</div>
+
         </div>
         <div className="flex container ml-5 mr-64 max-w-6xl my-10 items-center">
           <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-2">
-            {data?.posts.edges.map(({node}: any, i: React.Key) => (
+            {dataP?.posts.edges.map(({node}: any, i: React.Key) => (
               <li key={i}>
                 <Box
                   shadow="sm"
@@ -162,7 +181,7 @@ export default function Home() {
             baseStyles={{ bg: "whiteAlpha.50" }}
             activeStyles={{ bg: "brandRed.300" }}
             defaultCurrent={pageIndex}
-            total={data.posts.count}
+            total={dataP.posts.count}
             paginationProps={{ display: "flex"}}
             pageNeighbours={3}
             responsive
