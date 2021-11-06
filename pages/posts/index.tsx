@@ -11,6 +11,11 @@ import { GiModernCity } from "react-icons/gi";
 import { CUIAutoComplete } from 'chakra-ui-autocomplete'
 
 
+export interface Item {
+  label: string;
+  value: string;
+}
+
 const allPostsQuery = gql`
   query allPostsQuery($first: Int, $offset: Int) {
     posts(first: $first, offset: $offset) {
@@ -35,9 +40,11 @@ const allPostsQuery = gql`
 
 const allTagsQuery = gql`
    query allTagsQuery {
-    edges {
-      node {
-        name
+    tags {
+      edges {
+        node {
+          name
+        }
       }
     }
   }
@@ -45,12 +52,7 @@ const allTagsQuery = gql`
 
 export default function Home() {
 
-  const router = useRouter()
-  const [pageIndex, setPageIndex] = useState(1);
-  //const [pickerItems, setPickerItems] = useState(countries);
-  const [selectedItems, setSelectedItems] = useState([]);
-
-  const { loading: loadingP, data: dataP, error: errorP, fetchMore: fetchMoreP } = useQuery(allPostsQuery, {
+  const { loading: loadingPosts, data: dataPosts, error: errorPosts, fetchMore: fetchMorePosts } = useQuery(allPostsQuery, {
     variables: {
       first: 10,
       offset: 0
@@ -58,14 +60,28 @@ export default function Home() {
     fetchPolicy: "cache-and-network"
   });
 
-  const { loading: loadingT, data: dataT, error: errorT } = useQuery(allTagsQuery, {
+  const { loading: loadingTags, data: dataTags, error: errorTags } = useQuery(allTagsQuery, {
     fetchPolicy: "cache-and-network"
   });
+
+  //dataTags.tags.edges
+  //console.log(dataTags.tags.edges)
+
+  const handleSelectedItemsChange = (selectedItems?: Item[]) => {
+    if (selectedItems) {
+      setSelectedItems(selectedItems);
+    }
+  };
+
+  const handleCreateItem = (item: Item) => {
+    setPickerItems((curr) => [...curr, item]);
+    setSelectedItems((curr) => [...curr, item]);
+  };
 
   function OnPageChange(pageNumber: number): void {
     console.log(pageNumber)
     setPageIndex(pageNumber)
-    fetchMoreP({
+    fetchMorePosts({
       variables: {
         limit: 10,
         offset: (pageNumber - 1) * 10
@@ -74,8 +90,13 @@ export default function Home() {
     router.push(`/posts?page=${pageNumber}`)
   }
 
-  if (loadingP) return <p>Loading...</p>
-  if (errorP) return <p>Oh no... {errorP.message}</p>
+  const router = useRouter()
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pickerItems, setPickerItems] = React.useState();
+  const [selectedItems, setSelectedItems] = React.useState<Item[]>([]);
+
+  if (loadingPosts) return <p>Loading...</p>
+  if (errorPosts) return <p>Oh no... {errorPosts.message}</p>
 
   return (
     <div className="bg-gray-100">
@@ -103,12 +124,20 @@ export default function Home() {
         </div>
         <Flex>
         <div className="container ml-5 shadow w-xl rounded mt-10 items-center bg-white">
-          <div>filters</div>
-
-        </div>
+          <CUIAutoComplete
+            label="Choose preferred work locations"
+            placeholder="Type a Country"
+            onCreateItem={handleCreateItem}
+            items={pickerItems}
+            selectedItems={selectedItems}
+            onSelectedItemsChange={(changes) =>
+              handleSelectedItemsChange(changes.selectedItems)
+            }
+          />
+          </div>
         <div className="flex container ml-5 mr-64 max-w-6xl my-10 items-center">
           <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-2">
-            {dataP?.posts.edges.map(({node}: any, i: React.Key) => (
+            {dataPosts?.posts.edges.map(({node}: any, i: React.Key) => (
               <li key={i}>
                 <Box
                   shadow="sm"
@@ -181,7 +210,7 @@ export default function Home() {
             baseStyles={{ bg: "whiteAlpha.50" }}
             activeStyles={{ bg: "brandRed.300" }}
             defaultCurrent={pageIndex}
-            total={dataP.posts.count}
+            total={dataPosts.posts.count}
             paginationProps={{ display: "flex"}}
             pageNeighbours={3}
             responsive
