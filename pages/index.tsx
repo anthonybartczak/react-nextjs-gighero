@@ -8,7 +8,6 @@ import { Flex, useColorModeValue } from "@chakra-ui/react";
 
 
 export default function Home() {
-  
   return (
     <div>
       <Head>
