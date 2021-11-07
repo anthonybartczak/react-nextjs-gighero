@@ -6,13 +6,12 @@ import Pagination from "@choc-ui/paginator";
 import { Box, chakra, Flex, Link, Image, InputGroup, InputLeftElement, Input, Select } from "@chakra-ui/react";
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import { PhoneIcon } from '@chakra-ui/icons';
 import { GiModernCity } from "react-icons/gi";
 import { CUIAutoComplete } from 'chakra-ui-autocomplete'
 
 
 export interface Item {
-  label: string;
+  //label: string;
   value: string;
 }
 
@@ -52,16 +51,25 @@ const allTagsQuery = gql`
 
 export default function Home() {
 
-  const { loading: loadingPosts, data: dataPosts, error: errorPosts, fetchMore: fetchMorePosts } = useQuery(allPostsQuery, {
-    variables: {
-      first: 10,
-      offset: 0
-    },
+  const {
+    loading: loadingPosts,
+    data: dataPosts,
+    error: errorPosts,
+    fetchMore: fetchMorePosts
+  } = useQuery(allPostsQuery, {
+      variables: {
+        first: 10,
+        offset: 0
+      },
     fetchPolicy: "cache-and-network"
   });
 
-  const { loading: loadingTags, data: dataTags, error: errorTags } = useQuery(allTagsQuery, {
-    fetchPolicy: "cache-and-network"
+  const {
+    loading: loadingTags,
+    data: dataTags,
+    error: errorTags
+  } = useQuery(allTagsQuery, {
+      fetchPolicy: "cache-and-network"
   });
 
   //dataTags.tags.edges
@@ -92,11 +100,13 @@ export default function Home() {
 
   const router = useRouter()
   const [pageIndex, setPageIndex] = useState(1);
-  const [pickerItems, setPickerItems] = React.useState();
+  const [pickerItems, setPickerItems] = React.useState([]);
   const [selectedItems, setSelectedItems] = React.useState<Item[]>([]);
 
   if (loadingPosts) return <p>Loading...</p>
   if (errorPosts) return <p>Oh no... {errorPosts.message}</p>
+
+  //setPickerItems(dataTags.edges.tags);
 
   return (
     <div className="bg-gray-100">
@@ -123,10 +133,10 @@ export default function Home() {
           </Flex>
         </div>
         <Flex>
-        <div className="container ml-5 shadow w-xl rounded mt-10 items-center bg-white">
+        <div className="container ml-5 shadow max-w-sm , rounded mt-10 items-center bg-white px-2">
           <CUIAutoComplete
-            label="Choose preferred work locations"
-            placeholder="Type a Country"
+            label=""
+            placeholder="Wybierz rodzaj muzyki"
             onCreateItem={handleCreateItem}
             items={pickerItems}
             selectedItems={selectedItems}
