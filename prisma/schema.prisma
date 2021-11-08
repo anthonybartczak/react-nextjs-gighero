@@ -40,7 +40,8 @@ model User {
 
 model Tag {
   id    Int    @id
-  name  String
+  value String
+  label String
   posts Post[] @relation(references: [id])
 
   @@map("tags")

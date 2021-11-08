@@ -6,7 +6,8 @@ export const Tag = objectType({
   name: 'Tag',
   definition(t) {
     t.int('id');
-    t.string('name');
+    t.string('value');
+    t.string('label');
     t.list.field('posts', {
       type: Post,
       async resolve(_parent, _args, ctx) {
