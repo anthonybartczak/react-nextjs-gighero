@@ -34,17 +34,14 @@ enum Role {
 
 type Tag {
   id: Int
-  name: String
+  label: String
   posts: [Post]
-}
-
-type TagEdges {
-  node: Tag
+  value: String
 }
 
 type TagResponse {
   count: Int
-  edges: [TagEdges]
+  edges: [Tag]
 }
 
 type User {

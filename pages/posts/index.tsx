@@ -36,8 +36,7 @@ const allPostsQuery = gql`
           }
           title
           tags {
-            id
-            name
+            label
           }
         }
       }
@@ -50,9 +49,8 @@ const allTagsQuery = gql`
    query allTagsQuery {
     tags {
       edges {
-        node {
-          name
-        }
+        value
+        label
       }
     }
   }
@@ -62,22 +60,10 @@ export default function Home() {
 
   const router = useRouter()
   const [pageIndex, setPageIndex] = useState(1);
-  const [pickerItems, setPickerItems] = React.useState(countries);
+  const [pickerItems, setPickerItems] = React.useState([]);
   const [selectedItems, setSelectedItems] = React.useState<Item[]>([]);
 
-  // useEffect(() => {
-  //   effect
-  //   return () => {
-  //     cleanup
-  //   }
-  // }, [])
-
-  const {
-    loading: loadingPosts,
-    data: dataPosts,
-    error: errorPosts,
-    fetchMore: fetchMorePosts
-  } = useQuery(allPostsQuery, {
+  const {loading: loadingPosts, data: dataPosts, error: errorPosts, fetchMore: fetchMorePosts} = useQuery(allPostsQuery, {
       variables: {
         first: 10,
         offset: 0
@@ -93,9 +79,15 @@ export default function Home() {
       fetchPolicy: "cache-and-network"
   });
 
-  // let tempArr = []
-  // dataTags?.tags.edges.map(({node}: any) => (tempArr.push(node.name)));
-  // setPickerItems(tempArr)
+  useEffect(() => {
+    if(loadingTags === false && dataTags){
+        setPickerItems(dataTags.tags.edges);
+    }
+  }, [loadingTags, dataTags])
+
+  const truncate = (str: String) => {
+    return str.length > 15 ? str.substring(0, 14) + "..." : str;
+  }
 
   const handleSelectedItemsChange = (selectedItems?: Item[]) => {
     if (selectedItems) {
@@ -197,7 +189,7 @@ export default function Home() {
                     <Flex flexDirection="row" py={2}>
                       {node?.tags.map(({tag}: any, i: React.Key) => (
                         <div key={i} className="bg-brandOrangeRed-300 mr-2 rounded-md px-1">
-                          {node.tags[i]?.name}
+                          {truncate(node.tags[i]?.label)}
                         </div>
                       ))}
                     </Flex>

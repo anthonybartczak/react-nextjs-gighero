@@ -23,20 +23,20 @@ export const Tag = objectType({
   },
 })
 
-export const TagEdge = objectType({
-  name: 'TagEdges',
-  definition(t) {
-    t.field('node', {
-      type: Tag,
-    })
-  },
-})
+// export const TagEdge = objectType({
+//   name: 'TagEdges',
+//   definition(t) {
+//     t.field('node', {
+//       type: Tag,
+//     })
+//   },
+// })
 
 export const TagResponse = objectType({
   name: 'TagResponse',
   definition(t) {
     t.list.field('edges', {
-      type: TagEdge,
+      type: Tag,
     })
     t.int('count')
   },
@@ -56,9 +56,7 @@ export const TagsQuery = extendType({
 
         if (queryResults.length > 0) {
           const result = {
-            edges: queryResults.map((tag: any) => ({
-              node: tag,
-            })),
+            edges: queryResults,
             count: resultCount
           }
           return result
