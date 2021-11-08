@@ -1,19 +1,28 @@
 import Head from 'next/head'
-//import Image from 'next/image'
 import Navbar from '../../components/Navbar'
 import { gql, useQuery } from '@apollo/client'
 import Pagination from "@choc-ui/paginator";
 import { Box, chakra, Flex, Link, Image, InputGroup, InputLeftElement, Input, Select } from "@chakra-ui/react";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GiModernCity } from "react-icons/gi";
 import { CUIAutoComplete } from 'chakra-ui-autocomplete'
 
 
 export interface Item {
-  //label: string;
+  label: string;
   value: string;
 }
+
+const countries = [
+  { value: "ghana", label: "Ghana" },
+  { value: "nigeria", label: "Nigeria" },
+  { value: "kenya", label: "Kenya" },
+  { value: "southAfrica", label: "South Africa" },
+  { value: "unitedStates", label: "United States" },
+  { value: "canada", label: "Canada" },
+  { value: "germany", label: "Germany" }
+];
 
 const allPostsQuery = gql`
   query allPostsQuery($first: Int, $offset: Int) {
@@ -51,6 +60,18 @@ const allTagsQuery = gql`
 
 export default function Home() {
 
+  const router = useRouter()
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pickerItems, setPickerItems] = React.useState(countries);
+  const [selectedItems, setSelectedItems] = React.useState<Item[]>([]);
+
+  // useEffect(() => {
+  //   effect
+  //   return () => {
+  //     cleanup
+  //   }
+  // }, [])
+
   const {
     loading: loadingPosts,
     data: dataPosts,
@@ -72,8 +93,9 @@ export default function Home() {
       fetchPolicy: "cache-and-network"
   });
 
-  //dataTags.tags.edges
-  //console.log(dataTags.tags.edges)
+  // let tempArr = []
+  // dataTags?.tags.edges.map(({node}: any) => (tempArr.push(node.name)));
+  // setPickerItems(tempArr)
 
   const handleSelectedItemsChange = (selectedItems?: Item[]) => {
     if (selectedItems) {
@@ -82,8 +104,8 @@ export default function Home() {
   };
 
   const handleCreateItem = (item: Item) => {
-    setPickerItems((curr) => [...curr, item]);
-    setSelectedItems((curr) => [...curr, item]);
+    setPickerItems((current) => [...current, item]);
+    setSelectedItems((current) => [...current, item]);
   };
 
   function OnPageChange(pageNumber: number): void {
@@ -98,15 +120,8 @@ export default function Home() {
     router.push(`/posts?page=${pageNumber}`)
   }
 
-  const router = useRouter()
-  const [pageIndex, setPageIndex] = useState(1);
-  const [pickerItems, setPickerItems] = React.useState([]);
-  const [selectedItems, setSelectedItems] = React.useState<Item[]>([]);
-
   if (loadingPosts) return <p>Loading...</p>
   if (errorPosts) return <p>Oh no... {errorPosts.message}</p>
-
-  //setPickerItems(dataTags.edges.tags);
 
   return (
     <div className="bg-gray-100">
