@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Navbar from '../../components/Navbar'
 import { gql, useQuery } from '@apollo/client'
 import Pagination from "@choc-ui/paginator";
-import { Box, chakra, Flex, Link, Image, InputGroup, InputLeftElement, Input, Select } from "@chakra-ui/react";
+import { Box, Text, Avatar, Flex, Link, Image, InputGroup, InputLeftElement, Input, Select, CircularProgress, Tag } from "@chakra-ui/react";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GiModernCity } from "react-icons/gi";
@@ -13,16 +13,6 @@ export interface Item {
   label: string;
   value: string;
 }
-
-const countries = [
-  { value: "ghana", label: "Ghana" },
-  { value: "nigeria", label: "Nigeria" },
-  { value: "kenya", label: "Kenya" },
-  { value: "southAfrica", label: "South Africa" },
-  { value: "unitedStates", label: "United States" },
-  { value: "canada", label: "Canada" },
-  { value: "germany", label: "Germany" }
-];
 
 const allPostsQuery = gql`
   query allPostsQuery($first: Int, $offset: Int) {
@@ -112,7 +102,7 @@ export default function Home() {
     router.push(`/posts?page=${pageNumber}`)
   }
 
-  if (loadingPosts) return <p>Loading...</p>
+  if (loadingPosts) return <CircularProgress isIndeterminate color="brandRed.500" size="300px" thickness="4px"/>
   if (errorPosts) return <p>Oh no... {errorPosts.message}</p>
 
   return (
@@ -188,9 +178,9 @@ export default function Home() {
                     </Link>
                     <Flex flexDirection="row" py={2}>
                       {node?.tags.map(({tag}: any, i: React.Key) => (
-                        <div key={i} className="bg-brandOrangeRed-300 mr-2 rounded-md px-1">
+                        <Tag key={i} colorScheme="brandOrangeRed" className="mr-2">
                           {truncate(node.tags[i]?.label)}
-                        </div>
+                        </Tag>
                       ))}
                     </Flex>
                   </Box>
