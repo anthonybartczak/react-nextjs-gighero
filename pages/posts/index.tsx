@@ -127,10 +127,10 @@ export default function Home() {
       <Navbar />
       <main className="bg-gray-100">
         <div className="my-10">
-          <Flex direction="row">
-            <Box flexBasis="25%" className="container shadow max-w-sm rounded items-center bg-white px-1">
+          <Flex direction="row" justifyContent="center" gridGap={2}>
+            <Box flexBasis="25%" className="shadow mr-15 max-w-sm rounded bg-white px-1">
               <CUIAutoComplete
-                label=""
+                label={''}
                 placeholder="Wybierz rodzaj muzyki"
                 onCreateItem={handleCreateItem}
                 items={pickerItems}
@@ -140,7 +140,6 @@ export default function Home() {
                 }
               />
             </Box>
-            <div className="flex container ml-5 mr-64 max-w-6xl items-center">
               <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-2">
                 <div className="justify-center content-center shadow max-w-4xl rounded p-1 bg-white">
                   <Flex>
@@ -228,7 +227,6 @@ export default function Home() {
                   onChange={(pageNumber) => OnPageChange(pageNumber)}
                 />
               </ul>
-            </div>
           </Flex>
         </div>
       </main>
