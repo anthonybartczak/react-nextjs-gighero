@@ -10,7 +10,7 @@ class MyDocument extends Document {
 
   render(): ReactElement {
     return (
-      <Html lang="pl">
+      <Html lang="pl" className="bg-gray-100">
         <Head />
         <body>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
