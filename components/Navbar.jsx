@@ -1,4 +1,4 @@
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 
 import {
   Box,
@@ -32,13 +32,13 @@ import {
 export default function WithSubnavigation() {
 
   const { isOpen, onToggle } = useDisclosure();
-  const [ signIn, setSignIn ] = useSession();
+  // const [ signIn, setSignIn ] = useSession();
 
-  const handleGoogleLogin = async (e) => {
-    e.preventDefault()
-    setSignIn(True)
-    await signIn('google')
-  }
+  // const handleGoogleLogin = async (e) => {
+  //   e.preventDefault()
+  //   setSignIn(True)
+  //   await signIn('google')
+  // }
 
   return (
     <Box>

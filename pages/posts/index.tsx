@@ -2,17 +2,17 @@ import Head from 'next/head'
 import Navbar from '../../components/Navbar'
 import { gql, useQuery } from '@apollo/client'
 import Pagination from "@choc-ui/paginator";
-import { Box, Text, Avatar, Flex, Link, Image, InputGroup, InputLeftElement, Input, Select, CircularProgress, Tag, Center } from "@chakra-ui/react";
+import { Box, Text, Avatar, Flex, Link, Image, InputGroup, InputLeftElement, Input, Select, CircularProgress, Tag, Center, FormLabel, FormControl } from "@chakra-ui/react";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { GiModernCity } from "react-icons/gi";
-import { CUIAutoComplete } from 'chakra-ui-autocomplete'
+import {
+  Select as ChakraSelect,
+  AsyncSelect,
+  CreatableSelect,
+  AsyncCreatableSelect,
+} from "chakra-react-select";
 
-
-export interface Item {
-  label: string;
-  value: string;
-}
 
 const allPostsQuery = gql`
   query allPostsQuery($first: Int, $offset: Int) {
@@ -51,7 +51,7 @@ export default function Home() {
   const router = useRouter()
   const [pageIndex, setPageIndex] = useState(1);
   const [pickerItems, setPickerItems] = React.useState([]);
-  const [selectedItems, setSelectedItems] = React.useState<Item[]>([]);
+  //const [selectedItems, setSelectedItems] = React.useState<Item[]>([]);
 
   const { loading: loadingPosts, data: dataPosts, error: errorPosts, fetchMore: fetchMorePosts } = useQuery(allPostsQuery, {
     variables: {
@@ -129,16 +129,17 @@ export default function Home() {
         <div className="my-10">
           <Flex direction="row" justifyContent="center" gridGap={2}>
             <Box flexBasis="25%" className="shadow mr-15 max-w-sm rounded bg-white px-1">
-              <CUIAutoComplete
-                label={''}
+            <FormControl>
+              <FormLabel>
+              </FormLabel>
+              <ChakraSelect
+                isMulti
+                name="musicstyle"
+                options={pickerItems}
                 placeholder="Wybierz rodzaj muzyki"
-                onCreateItem={handleCreateItem}
-                items={pickerItems}
-                selectedItems={selectedItems}
-                onSelectedItemsChange={(changes) =>
-                  handleSelectedItemsChange(changes.selectedItems)
-                }
+                selectedOptionColor="green"
               />
+            </FormControl>
             </Box>
               <ul className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 gap-2">
                 <div className="justify-center content-center shadow max-w-4xl rounded p-1 bg-white">
